@@ -19,10 +19,20 @@
 #   thing, and not one of the 7 nonterminals validate_bnf.py checks for
 #   by name -- but you'll need at least one to avoid left recursion).
 
-<program> ::=
-<statement> ::=
-<declaration> ::=
-<assignment> ::=
-<expr> ::=
-<term> ::=
-<factor> ::=
+<program> ::= <statement> <program> | epsilon
+
+<statement> ::= <declaration> | <assignment>
+
+<declaration> ::= "let" IDENT "=" <expr> ";"
+
+<assignment> ::= IDENT "=" <expr> ";"
+
+<expr> ::= <term> <tail>
+
+<tail> ::= "+" <term> <tail> | "-" <term> <tail> | epsilon
+
+<term> ::= <factor> <term_tail>
+
+<term_tail> ::= "*" <factor> <term_tail> | "/" <factor> <term_tail> | epsilon
+
+<factor> ::= NUMBER | IDENT | "-" <factor> | "(" <expr> ")"
